@@ -1,7 +1,63 @@
 /*
- * Marlowe & Finch operations dashboard. Light theme only; colours are hardcoded here.
- * (A theme toggle with CSS variables is ticket TODO-231.)
+ * Marlowe & Finch operations dashboard. Theme controlled via data-theme on <html>.
+ * CSS variables define all colours; JavaScript sets the attribute and persists to localStorage.
  */
+
+:root[data-theme="light"] {
+  --color-bg:           #f3f1ec;
+  --color-text:         #1f2a37;
+  --color-heading:      #4a2c19;
+  --color-subtle:       #6b7280;
+  --color-border:       #d9d3c7;
+  --color-border-light: #e3ddd1;
+  --color-border-row:   #ece7dd;
+  --color-surface:      #ffffff;
+  --color-input-border: #c9c2b4;
+  --color-field-text:   #4b5563;
+  --color-btn-hover:    #f8f6f1;
+  --color-preset-active-bg:     #e8dfd2;
+  --color-preset-active-border: #a98467;
+  --color-cta:          #4a2c19;
+  --color-cta-hover:    #613a22;
+  --color-cta-text:     #ffffff;
+  --color-renewal-bg:   #fff4ec;
+  --color-renewal-border: #c2410c;
+  --color-renewal-text: #9a3412;
+  --color-bar:          #2f6f73;
+  --color-bar-warn:     #c2410c;
+  --color-bar-label:    #374151;
+  --color-bar-value:    #6b7280;
+  --color-toggle-bg:    #e8dfd2;
+  --color-toggle-border: #a98467;
+}
+
+:root[data-theme="dark"] {
+  --color-bg:           #0f172a;
+  --color-text:         #e2e8f0;
+  --color-heading:      #f0c98a;
+  --color-subtle:       #94a3b8;
+  --color-border:       #334155;
+  --color-border-light: #1e293b;
+  --color-border-row:   #1e293b;
+  --color-surface:      #1e293b;
+  --color-input-border: #475569;
+  --color-field-text:   #cbd5e1;
+  --color-btn-hover:    #273549;
+  --color-preset-active-bg:     #2d3f55;
+  --color-preset-active-border: #64748b;
+  --color-cta:          #2f6f73;
+  --color-cta-hover:    #3d8f94;
+  --color-cta-text:     #ffffff;
+  --color-renewal-bg:   #1f1208;
+  --color-renewal-border: #c2410c;
+  --color-renewal-text: #fb923c;
+  --color-bar:          #38bdf8;
+  --color-bar-warn:     #f97316;
+  --color-bar-label:    #cbd5e1;
+  --color-bar-value:    #94a3b8;
+  --color-toggle-bg:    #1e293b;
+  --color-toggle-border: #475569;
+}
 
 * {
   box-sizing: border-box;
@@ -10,8 +66,8 @@
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: #f3f1ec;
-  color: #1f2a37;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 .app {
@@ -29,18 +85,18 @@ body {
   align-items: flex-end;
   gap: 16px;
   padding-bottom: 16px;
-  border-bottom: 2px solid #d9d3c7;
+  border-bottom: 2px solid var(--color-border);
 }
 
 .header h1 {
   margin: 0;
   font-size: 1.6rem;
-  color: #4a2c19;
+  color: var(--color-heading);
 }
 
 .subtitle {
   margin: 4px 0 0;
-  color: #6b7280;
+  color: var(--color-subtle);
 }
 
 .range-form {
@@ -52,41 +108,41 @@ body {
 
 .range-field {
   font-size: 0.85rem;
-  color: #4b5563;
+  color: var(--color-field-text);
 }
 
 .range-field input {
   margin-left: 4px;
   padding: 6px 8px;
-  border: 1px solid #c9c2b4;
+  border: 1px solid var(--color-input-border);
   border-radius: 4px;
-  background: #ffffff;
-  color: #1f2a37;
+  background: var(--color-surface);
+  color: var(--color-text);
   font: inherit;
 }
 
 button {
   padding: 7px 12px;
-  border: 1px solid #c9c2b4;
+  border: 1px solid var(--color-input-border);
   border-radius: 4px;
-  background: #ffffff;
-  color: #1f2a37;
+  background: var(--color-surface);
+  color: var(--color-text);
   font: inherit;
   cursor: pointer;
 }
 
 button:hover {
-  background: #f8f6f1;
+  background: var(--color-btn-hover);
 }
 
 #range-apply {
-  background: #4a2c19;
-  border-color: #4a2c19;
-  color: #ffffff;
+  background: var(--color-cta);
+  border-color: var(--color-cta);
+  color: var(--color-cta-text);
 }
 
 #range-apply:hover {
-  background: #613a22;
+  background: var(--color-cta-hover);
 }
 
 .presets {
@@ -96,9 +152,15 @@ button:hover {
 }
 
 .preset.active {
-  background: #e8dfd2;
-  border-color: #a98467;
+  background: var(--color-preset-active-bg);
+  border-color: var(--color-preset-active-border);
   font-weight: 600;
+}
+
+#theme-toggle {
+  background: var(--color-toggle-bg);
+  border-color: var(--color-toggle-border);
+  font-size: 0.85rem;
 }
 
 /* Status line */
@@ -107,7 +169,7 @@ button:hover {
   min-height: 1.4em;
   margin: 12px 0 0;
   font-size: 0.9rem;
-  color: #6b7280;
+  color: var(--color-subtle);
 }
 
 .status.error {
@@ -128,15 +190,15 @@ button:hover {
   display: flex;
   flex-direction: column;
   padding: 18px 20px;
-  background: #ffffff;
-  border: 1px solid #e3ddd1;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
   border-radius: 8px;
 }
 
 .kpi-value {
   font-size: 2rem;
   font-weight: 700;
-  color: #1f2a37;
+  color: var(--color-text);
 }
 
 .kpi-label {
@@ -144,7 +206,7 @@ button:hover {
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #6b7280;
+  color: var(--color-subtle);
 }
 
 /* Charts */
@@ -159,8 +221,8 @@ button:hover {
 .chart {
   margin: 0;
   padding: 16px 20px;
-  background: #ffffff;
-  border: 1px solid #e3ddd1;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
   border-radius: 8px;
 }
 
@@ -169,7 +231,7 @@ button:hover {
   margin: 0 0 12px;
   font-size: 1rem;
   font-weight: 600;
-  color: #4a2c19;
+  color: var(--color-heading);
 }
 
 .chart-svg {
@@ -180,19 +242,19 @@ button:hover {
 }
 
 .chart-svg .bar {
-  fill: #2f6f73;
+  fill: var(--color-bar);
 }
 
 .chart-svg .bar.warn {
-  fill: #c2410c;
+  fill: var(--color-bar-warn);
 }
 
 .chart-svg .bar-label {
-  fill: #374151;
+  fill: var(--color-bar-label);
 }
 
 .chart-svg .bar-value {
-  fill: #6b7280;
+  fill: var(--color-bar-value);
   font-size: 12px;
 }
 
@@ -201,8 +263,8 @@ button:hover {
 .panel {
   padding: 16px 20px;
   margin-bottom: 24px;
-  background: #ffffff;
-  border: 1px solid #e3ddd1;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
   border-radius: 8px;
 }
 
@@ -216,14 +278,14 @@ button:hover {
 .late-table td {
   padding: 8px 10px;
   text-align: left;
-  border-bottom: 1px solid #ece7dd;
+  border-bottom: 1px solid var(--color-border-row);
 }
 
 .late-table th {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #6b7280;
+  color: var(--color-subtle);
 }
 
 .late-table .num {
@@ -231,7 +293,7 @@ button:hover {
 }
 
 .late-table tr.empty td {
-  color: #6b7280;
+  color: var(--color-subtle);
   font-style: italic;
 }
 
@@ -246,13 +308,13 @@ button:hover {
   grid-template-columns: 1fr;
   gap: 2px;
   padding: 10px 12px;
-  border-left: 4px solid #e3ddd1;
-  border-bottom: 1px solid #ece7dd;
+  border-left: 4px solid var(--color-border-light);
+  border-bottom: 1px solid var(--color-border-row);
 }
 
 .vendor.renewal-due {
-  border-left-color: #c2410c;
-  background: #fff4ec;
+  border-left-color: var(--color-renewal-border);
+  background: var(--color-renewal-bg);
 }
 
 .vendor-name {
@@ -262,10 +324,10 @@ button:hover {
 .vendor-meta,
 .vendor-end {
   font-size: 0.85rem;
-  color: #6b7280;
+  color: var(--color-subtle);
 }
 
 .vendor.renewal-due .vendor-end {
-  color: #9a3412;
+  color: var(--color-renewal-text);
   font-weight: 600;
 }

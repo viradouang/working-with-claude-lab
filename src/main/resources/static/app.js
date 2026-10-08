@@ -13,6 +13,9 @@
   var DEFAULT_PRESET_DAYS = 30;
   var LATE_LIMIT = 20;
   var SVG_NS = 'http://www.w3.org/2000/svg';
+  var THEME_KEY = 'ops-theme';
+  var THEME_DARK = 'dark';
+  var THEME_LIGHT = 'light';
 
   // ---------- API client ----------
 
@@ -109,6 +112,7 @@
 
     var els = {
       status: document.getElementById('status-line'),
+      themeToggle: document.getElementById('theme-toggle'),
       form: document.getElementById('range-form'),
       from: document.getElementById('range-from'),
       to: document.getElementById('range-to'),
@@ -333,6 +337,47 @@
       return load(range.from, range.to);
     }
 
+    // ---------- Theme ----------
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      if (els.themeToggle) {
+        if (theme === THEME_DARK) {
+          els.themeToggle.textContent = '☀ Light';
+          els.themeToggle.setAttribute('aria-label', 'Switch to light theme');
+        } else {
+          els.themeToggle.textContent = '☾ Dark';
+          els.themeToggle.setAttribute('aria-label', 'Switch to dark theme');
+        }
+      }
+    }
+
+    function initTheme(storage) {
+      var stored = storage && storage.getItem(THEME_KEY);
+      applyTheme(stored === THEME_LIGHT ? THEME_LIGHT : THEME_DARK);
+    }
+
+    function toggleTheme(storage) {
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === THEME_DARK ? THEME_LIGHT : THEME_DARK;
+      applyTheme(next);
+      if (storage) {
+        storage.setItem(THEME_KEY, next);
+      }
+    }
+
+    var _storage = (function () {
+      try { return window.localStorage; } catch (e) { return null; }
+    }());
+
+    initTheme(_storage);
+
+    if (els.themeToggle) {
+      els.themeToggle.addEventListener('click', function () {
+        toggleTheme(_storage);
+      });
+    }
+
     els.form.addEventListener('submit', function (event) {
       event.preventDefault();
       state.preset = null;
@@ -372,7 +417,10 @@
     formatMoney: formatMoney,
     barWidths: barWidths,
     applyPreset: applyPreset,
-    daysUntil: daysUntil
+    daysUntil: daysUntil,
+    THEME_KEY: THEME_KEY,
+    THEME_DARK: THEME_DARK,
+    THEME_LIGHT: THEME_LIGHT
   };
 
   if (typeof module !== 'undefined') {
